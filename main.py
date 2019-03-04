@@ -9,14 +9,15 @@ from torch.utils.data import DataLoader
 from vdsr import Net
 from dataset import DatasetFromHdf5
 import time
-
+import numpy as np
+import re
 # Training settings
 parser = argparse.ArgumentParser(description="PyTorch VDSR")
 parser.add_argument("--batchSize", type=int, default=32, help="Training batch size")
 parser.add_argument("--nEpochs", type=int, default=100, help="Number of epochs to train for")
 parser.add_argument("--lr", type=float, default=0.1, help="Learning Rate. Default=0.1")
 parser.add_argument("--step", type=int, default=10, help="Sets the learning rate to the initial LR decayed by momentum every n epochs, Default: n=10")
-parser.add_argument("--cuda", type=int,default=3, help="Use cuda?")
+parser.add_argument("--cuda", type=int,default=2, help="Use cuda?")
 parser.add_argument("--resume", default="", type=str, help="Path to checkpoint (default: none)")
 parser.add_argument("--start-epoch", default=1, type=int, help="Manual epoch number (useful on restarts)")
 parser.add_argument("--clip", type=float, default=0.4, help="Clipping Gradients. Default=0.4")
@@ -49,11 +50,11 @@ def main():
 
     print("===> Building model")
     model = Net()
-    criterion = nn.MSELoss(size_average=False)
+    # criterion = nn.MSELoss(size_average=True)
+    criterion = nn.SmoothL1Loss()
 
     print("===> Setting GPU")
     if cuda:
-
         model = torch.nn.DataParallel(model, device_ids=list(range(cuda))).cuda()
         criterion = criterion.cuda()
         print("=======>Using GPU :%s"%range(cuda))
@@ -77,6 +78,9 @@ def main():
             print("=> no model found at '{}'".format(opt.pretrained))  
 
     print("===> Setting Optimizer")
+    #TODO
+    # for i in model.parameters():
+    #     print(i.grad)
     optimizer = optim.SGD(model.parameters(), lr=opt.lr, momentum=opt.momentum, weight_decay=opt.weight_decay)
 #    optimizer=optim.Adam(model.parameters(),lr=0.01)
 #    optimizer=optim.Adam(model.parameters(),lr=0.001)
@@ -100,10 +104,10 @@ def train(training_data_loader, optimizer, model, criterion, epoch):
 
     print("Epoch={}, lr={}".format(epoch, optimizer.param_groups[0]["lr"]))
 
-    model.train()
+    model.train()#model设为Train模式
     iteration_100_count=0
     for iteration, batch in enumerate(training_data_loader, 1):
-        input, target = Variable(batch[0]), Variable(batch[1], requires_grad=False)
+        input, target = Variable(batch[0]), Variable(batch[1], requires_grad=True)
 #        print('input size:',input.shape)
         if opt.cuda:
             input = input.cuda()
@@ -114,12 +118,20 @@ def train(training_data_loader, optimizer, model, criterion, epoch):
         loss.backward() 
         nn.utils.clip_grad_norm_(model.parameters(),opt.clip)
         optimizer.step()
+        # for name, net in model.named_parameters():
+        #     if re.match("conv", name):
+        #         a = net.grad.cpu().numpy()
+        #         a = a.flatten()
+        #         cnn_grad_norm = np.linalg.norm(a, ord=2, axis=0)
+        #         print(cnn_grad_norm)
         consume_time = time.time()-pre
         iteration_100_count += consume_time
         if iteration == len(training_data_loader):
             print("===> Epoch[{}]({}/{}): Loss: {:.10f},consume time:{}".format(epoch, iteration, len(training_data_loader), loss.data.item(),iteration_100_count))
             iteration_100_count=0
         if iteration%100 == 0:
+            # for net in model.parameters():
+            #     print(net.grad)
             print("===> Epoch[{}]({}/{}): Loss: {:.10f},consume time:{}".format(epoch, iteration, len(training_data_loader), loss.data.item(),iteration_100_count))
             iteration_100_count=0
             
@@ -135,6 +147,6 @@ def save_checkpoint(model, epoch):
     print("Checkpoint saved to {}".format(model_out_path))
 
 if __name__ == "__main__":
-    os.environ["CUDA_VISIBLE_DEVICES"] = '0, 1, 2'
+    os.environ["CUDA_VISIBLE_DEVICES"] = '0, 1'
 
     main()

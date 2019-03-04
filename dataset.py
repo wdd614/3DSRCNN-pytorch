@@ -1,7 +1,7 @@
 import torch.utils.data as data
 import torch
 import h5py
-import numpy as np
+
 class DatasetFromHdf5(data.Dataset):
     def __init__(self, file_path):
         super(DatasetFromHdf5, self).__init__()
@@ -12,9 +12,7 @@ class DatasetFromHdf5(data.Dataset):
         # self.target = self.target.reshape((-1, 25, 25))
     def __getitem__(self, index):        
 #        print ('data size:',self.data.shape)
-        data = np.array(self.data[index,:,:,:]).reshape((-1, 25, 25))
-        target = np.array(self.data[index, :, :, :]).reshape((-1, 25, 25))
-        return torch.from_numpy(data).float(), torch.from_numpy(target).float()
+        return torch.from_numpy(self.data[index,:,:,:]).float(), torch.from_numpy(self.target[index,:,:,:]).float()
         
     def __len__(self):
 
