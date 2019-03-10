@@ -107,7 +107,7 @@ def train(training_data_loader, optimizer, model, criterion, epoch):
     model.train()#model设为Train模式
     iteration_100_count=0
     for iteration, batch in enumerate(training_data_loader, 1):
-        input, target = Variable(batch[0]), Variable(batch[1], requires_grad=True)
+        input, target = batch[0], batch[1]#因为是target设为false
 #        print('input size:',input.shape)
         if opt.cuda:
             input = input.cuda()
@@ -118,12 +118,6 @@ def train(training_data_loader, optimizer, model, criterion, epoch):
         loss.backward() 
         nn.utils.clip_grad_norm_(model.parameters(),opt.clip)
         optimizer.step()
-        # for name, net in model.named_parameters():
-        #     if re.match("conv", name):
-        #         a = net.grad.cpu().numpy()
-        #         a = a.flatten()
-        #         cnn_grad_norm = np.linalg.norm(a, ord=2, axis=0)
-        #         print(cnn_grad_norm)
         consume_time = time.time()-pre
         iteration_100_count += consume_time
         if iteration == len(training_data_loader):
@@ -137,16 +131,23 @@ def train(training_data_loader, optimizer, model, criterion, epoch):
             
 def save_checkpoint(model, epoch):
 
-    model_out_path = "model/" + "model_epoch_{}.pkl".format(epoch)
+    timeStamp = get_time_stamp(time) + "_model"
+    model_out_path = os.path.join("model/", timeStamp , "model_epoch_{}.pkl".format(epoch))
     state = {"epoch": epoch ,"model": model}
-    if not os.path.exists("model/"):
+    if not os.path.exists(os.path.join("model/", timeStamp)):
         os.makedirs("model/")
 
     torch.save(state, model_out_path)
         
     print("Checkpoint saved to {}".format(model_out_path))
 
+
+def get_time_stamp(time):
+    timeStamp = time.strftime("%m%d-%H%M", time.localtime(time.time()))
+    return timeStamp
+
+
 if __name__ == "__main__":
-    os.environ["CUDA_VISIBLE_DEVICES"] = '0, 1'
+    os.environ["CUDA_VISIBLE_DEVICES"] = '2, 3'
 
     main()

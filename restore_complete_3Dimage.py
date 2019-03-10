@@ -23,12 +23,15 @@ parser.add_argument('--block_size',type=int,default=100,help='reconstrucion size
 parser.add_argument('--sub_name',type=str,default='11')
 opt=parser.parse_args()
 #dataset_interp=utils.read_imagecollection('/home/wdd/pytorch-vdsr-3d/testset/x2interp/test1x2')
-num,h,w=(opt.imagesize,opt.imagesize,opt.imagesize)
-batch_generate_size=100
-reconstruction_size=400
-reconstruction_output=np.zeros((num,h,w))
-default_path='3D_VDSR_'
-sub_name=opt.sub_name
+num,h,w = (opt.imagesize,opt.imagesize,opt.imagesize)
+batch_generate_size = 100
+reconstruction_size = 400
+reconstruction_output = np.zeros((num,h,w))
+default_path = 'gen_results/3D_VDSR_'
+if not os.path.exists(default_path):
+    os.makedirs("gen_results/")
+
+sub_name = opt.sub_name
 #utils.read_imagecollection('/home/wdd/pytorch-vdsr-3d/3D_VDSR_001')
 for count_d in range((num//batch_generate_size)):
     for count_h in range((h//batch_generate_size)):
@@ -40,12 +43,11 @@ for count_d in range((num//batch_generate_size)):
             pixel_start_w=count_w*batch_generate_size
             pixel_end_w=(count_w+1)*batch_generate_size
             sub_block=utils.read_imagecollection(file_path=default_path+str(count_d)+str(count_h)+str(count_w))
-#            os.remove('3D_VDSR_'+str(count_d)+str(count_h)+str(count_w))
             #print ('current path is:'+'3D_VDSR_'+str(count_d)+str(count_h)+str(count_w),'shape of sub_block is:',sub_block.shape)
             reconstruction_output[pixel_start_d:pixel_end_d,pixel_start_h:pixel_end_h,pixel_start_w:pixel_end_w]=sub_block
 
-dataset_ori=utils.read_imagecollection(opt.oripath)
-dataset_interp=utils.read_imagecollection(opt.interpath)
+dataset_ori = utils.read_imagecollection(opt.oripath)
+dataset_interp = utils.read_imagecollection(opt.interpath)
 #print ('======>Read original image from : ',opt.oripath,' Read low resolution images from : ',opt.interpath)
 #print ('PSNR of interp:',utils.PSNR(dataset_interp[:reconstruction_size,:reconstruction_size,:reconstruction_size],dataset_ori[:reconstruction_size,:reconstruction_size,:reconstruction_size]))
 #print ('PSNR of reconstructor:',utils.PSNR(reconstruction_output,dataset_ori[:reconstruction_size,:reconstruction_size,:reconstruction_size]))

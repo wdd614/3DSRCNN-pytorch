@@ -5,7 +5,7 @@ import h5py
 class DatasetFromHdf5(data.Dataset):
     def __init__(self, file_path):
         super(DatasetFromHdf5, self).__init__()
-        hf = h5py.File(file_path, 'r')
+        hf = h5py.File(file_path)#'r'
         self.data = hf.get('data')
         self.target = hf.get('label')
         # self.data = self.data.reshape((-1, 25, 25))
@@ -18,5 +18,4 @@ class DatasetFromHdf5(data.Dataset):
 
         return self.data.shape[0]
     
-
 
