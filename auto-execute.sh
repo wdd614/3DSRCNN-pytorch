@@ -2,7 +2,7 @@
 CUDA_VISIBLE_DEVICES=2
 
 ori_path='30x30_2'
-#输入低分辨率图片
+
 inter_path='30x30_2'
 model_path='model_12layers_25input_3kernel_multi/model_epoch_20.pkl'
 saved_prefix='30x30_'
