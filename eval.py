@@ -7,7 +7,7 @@ import scipy.io as sio
 
 parser = argparse.ArgumentParser(description="PyTorch VDSR Eval")
 parser.add_argument("--cuda", action="store_true", help="use cuda?")
-parser.add_argument("--model", default="model/model_epoch_50.pth", type=str, help="model path")
+parser.add_argument("--model", default="/home/bobo/Hdisk/WDD/Pytorch-3DSRCNN/model_12layers_25input_3kernel_multi/model_epoch_40.pkl", type=str, help="model path")
 parser.add_argument("--dataset", default="Set5", type=str, help="dataset name, Default: Set5")
 
 def PSNR(pred, gt, shave_border=0):

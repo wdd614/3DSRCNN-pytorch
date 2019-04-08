@@ -13,11 +13,11 @@ import numpy as np
 import re
 # Training settings
 parser = argparse.ArgumentParser(description="PyTorch VDSR")
-parser.add_argument("--batchSize", type=int, default=32, help="Training batch size")
+parser.add_argument("--batchSize", type=int, default=64, help="Training batch size")
 parser.add_argument("--nEpochs", type=int, default=100, help="Number of epochs to train for")
 parser.add_argument("--lr", type=float, default=0.1, help="Learning Rate. Default=0.1")
 parser.add_argument("--step", type=int, default=10, help="Sets the learning rate to the initial LR decayed by momentum every n epochs, Default: n=10")
-parser.add_argument("--cuda", type=int,default=2, help="Use cuda?")
+parser.add_argument("--cuda", type=int,default=1, help="Use cuda?")
 parser.add_argument("--resume", default="", type=str, help="Path to checkpoint (default: none)")
 parser.add_argument("--start-epoch", default=1, type=int, help="Manual epoch number (useful on restarts)")
 parser.add_argument("--clip", type=float, default=0.4, help="Clipping Gradients. Default=0.4")
@@ -26,7 +26,7 @@ parser.add_argument("--momentum", default=0.9, type=float, help="Momentum, Defau
 parser.add_argument("--weight-decay", "--wd", default=1e-4, type=float, help="Weight decay, Default: 1e-4")
 parser.add_argument('--pretrained', default='', type=str, help='path to pretrained model (default: none)')
 parser.add_argument('--train_path',type=str,default="train_data/3dtrain25all.h5",help='Path to train dataset')
-
+parser.add_argument('--memo', default= 'L_', type=str, help='logger to identifify')
 def main():
     global opt, model
     opt = parser.parse_args()
@@ -50,9 +50,10 @@ def main():
 
     print("===> Building model")
     model = Net()
+    ################Loss function!!!!!!!!
     # criterion = nn.MSELoss(size_average=True)
     criterion = nn.SmoothL1Loss()
-
+    ################
     print("===> Setting GPU")
     if cuda:
         model = torch.nn.DataParallel(model, device_ids=list(range(cuda))).cuda()
@@ -86,9 +87,11 @@ def main():
 #    optimizer=optim.Adam(model.parameters(),lr=0.001)
 
     print("===> Training")
+    model_saved_prefix = get_time_stamp(time) + opt.memo + "_model"
+    saved_model_path = os.path.join("model/", model_saved_prefix)
     for epoch in range(opt.start_epoch, opt.nEpochs + 1):        
         train(training_data_loader, optimizer, model, criterion, epoch)
-        save_checkpoint(model, epoch)
+        save_checkpoint(model, epoch, saved_model_path)
 
 def adjust_learning_rate(optimizer, epoch):
     """Sets the learning rate to the initial LR decayed by 10 every 10 epochs"""
@@ -105,7 +108,7 @@ def train(training_data_loader, optimizer, model, criterion, epoch):
     print("Epoch={}, lr={}".format(epoch, optimizer.param_groups[0]["lr"]))
 
     model.train()#model设为Train模式
-    iteration_100_count=0
+    iteration_100_count = 0
     for iteration, batch in enumerate(training_data_loader, 1):
         input, target = batch[0], batch[1]#因为是target设为false
 #        print('input size:',input.shape)
@@ -123,23 +126,22 @@ def train(training_data_loader, optimizer, model, criterion, epoch):
         if iteration == len(training_data_loader):
             print("===> Epoch[{}]({}/{}): Loss: {:.10f},consume time:{}".format(epoch, iteration, len(training_data_loader), loss.data.item(),iteration_100_count))
             iteration_100_count=0
-        if iteration%100 == 0:
+        if iteration % 100 == 0:
             # for net in model.parameters():
             #     print(net.grad)
             print("===> Epoch[{}]({}/{}): Loss: {:.10f},consume time:{}".format(epoch, iteration, len(training_data_loader), loss.data.item(),iteration_100_count))
             iteration_100_count=0
-            
-def save_checkpoint(model, epoch):
 
-    timeStamp = get_time_stamp(time) + "_model"
-    model_out_path = os.path.join("model/", timeStamp , "model_epoch_{}.pkl".format(epoch))
+def save_checkpoint(model, epoch, saved_path="model/"):
+
+    model_out_path = os.path.join(saved_path, "model_epoch_{}.pkl".format(epoch))
     state = {"epoch": epoch ,"model": model}
-    if not os.path.exists(os.path.join("model/", timeStamp)):
-        os.makedirs("model/")
+    if not os.path.exists(saved_path):
+        os.makedirs(saved_path)
 
     torch.save(state, model_out_path)
         
-    print("Checkpoint saved to {}".format(model_out_path))
+    print("=========Checkpoint saved to {}".format(model_out_path))
 
 
 def get_time_stamp(time):
@@ -148,6 +150,8 @@ def get_time_stamp(time):
 
 
 if __name__ == "__main__":
-    os.environ["CUDA_VISIBLE_DEVICES"] = '2, 3'
+    import torch
+
+    os.environ["CUDA_VISIBLE_DEVICES"] = ' 3 '
 
     main()

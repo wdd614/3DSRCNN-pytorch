@@ -30,8 +30,8 @@ def generate_2Dimage(array_like,save_mode='3D_VDSR_/',image_format='bmp'):
         os.mkdir(save_mode)
     for count,every_image in enumerate(array_like):
         cv2.imwrite(save_mode+str(count+1)+'.'+image_format,every_image)
-    #print ('Save image to path:',save_mode)
-    #print ('Successfully save '+str(count+1)+' '+image_format+'image!')
+    print ('Save image to path:',save_mode)
+    print ('Successfully save '+str(count+1)+' '+image_format+'image!')
 
 def display_2Dimage(image_array,mode='gray'):
     plt.imshow(image_array,cmap=mode)
@@ -47,7 +47,7 @@ def read_imagecollection(file_path,image_format='bmp'):#
     for img in imgs:
         imgs_arrayset.append(img)
     imgs_arrayset=np.asarray(imgs_arrayset).astype(np.float)
-    #print ('Shape of imageset is:',imgs_arrayset.shape)
+    print ('Shape of imageset is:',imgs_arrayset.shape)
     return imgs_arrayset
 
 def pre_crop(image_array,reconstrution_size=400):
@@ -56,3 +56,7 @@ def pre_crop(image_array,reconstrution_size=400):
     temp[:real_shape[0],:real_shape[1],:real_shape[2]]=image_array
     return temp
         
+if __name__ == "__name__":
+    import glob
+    ori_path = glob.glob("result/3D_VDSR_/low1")
+    intp_path = glob.glob("")
