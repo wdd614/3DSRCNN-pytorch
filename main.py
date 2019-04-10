@@ -12,7 +12,7 @@ import time
 import numpy as np
 import re
 # Training settings
-parser = argparse.ArgumentParser(description="PyTorch VDSR")
+parser = argparse.ArgumentParser(description="Pytorch 3DSRCNN")
 parser.add_argument("--batchSize", type=int, default=64, help="Training batch size")
 parser.add_argument("--nEpochs", type=int, default=100, help="Number of epochs to train for")
 parser.add_argument("--lr", type=float, default=0.1, help="Learning Rate. Default=0.1")
@@ -26,7 +26,7 @@ parser.add_argument("--momentum", default=0.9, type=float, help="Momentum, Defau
 parser.add_argument("--weight-decay", "--wd", default=1e-4, type=float, help="Weight decay, Default: 1e-4")
 parser.add_argument('--pretrained', default='', type=str, help='path to pretrained model (default: none)')
 parser.add_argument('--train_path',type=str,default="train_data/3dtrain25all.h5",help='Path to train dataset')
-parser.add_argument('--memo', default= 'L_', type=str, help='logger to identifify')
+parser.add_argument('--memo', default= 'L_', type=str, help='prefix of logger ')
 def main():
     global opt, model
     opt = parser.parse_args()
