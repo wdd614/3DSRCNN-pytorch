@@ -66,3 +66,12 @@ x2, x3, x4 scale PSNR of model/0310-2114_model/model_epoch_35.pkl
 -----------------
 ```
 the acerage PSNR will be generated and  store in output.txt
+**Note that, If you want to use `auto-execute.sh`, you must promise 
+established file-tree format!**
+```
+ori_path='30x30_2'#HR_path
+inter_path='30x30_2'#LR_path(under feeding into network)
+model_path='model_12layers_25input_3kernel_multi/model_epoch_20.pkl'#specify model path
+saved_prefix='30x30_'#prefix file path  to save generated images
+format='bmp'#reading images format
+```
