@@ -25,7 +25,7 @@ python main.py
 --train_path',type=str,default="train_data/3dtrain25all.h5",help='Path to train dataset'
 --memo', default= 'L_', type=str, help='prefix of logger '
 ```
-## how to modify our network 
+## How to  find our network 
 `3dsrcnn.py` This program is a structure for building a network.  ``
 ## Automatically Reconstruct and calculate PSNR  
 Because our validation dataset is very complex which contains 5 sets, each set contains x2, x3, x4 scale.
