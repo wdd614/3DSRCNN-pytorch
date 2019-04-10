@@ -1,6 +1,6 @@
 # 3DSRCNN-pytorch  
-## How to make trainig dataset for?  
-This part is coded by matlab.  
+## How to make trainig dataset for 3D CT images?  
+This part is coded by matlab. 
 ## Where to find Training Data?
 The traing data is generated through 5 CT sets, summed up to  2000 single 2D images totally. 
 So this is so big training data library. We generated 32.5G of data, it is inconvenient to upload to Github.
