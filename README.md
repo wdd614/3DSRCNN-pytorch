@@ -6,7 +6,7 @@ The traing data is generated through 5 CT sets, summed up to  2000 single 2D ima
 So this is so big training data library. We generated 32.5G of data, it is inconvenient to upload to Github.
 If your would like to trainig network, please concat me with 1556905690@qq.com or issue in this Repository.
 ## How to train a 3D super resolution Network?  
-It is easy to train our network, please
+It is easy to train our network,running with specified parameters, and the following is a helper of parameters:
 ```
 python main.py 
 
@@ -40,7 +40,6 @@ bash auto-excute=ulti_testset.sh
 ```
 For example, the generated log is follwing:
 ```
-
 x2, x3, x4 scale PSNR of model/0310-2114_model/model_epoch_35.pkl 
 -----------------
 2019/3/  23 Tue 07:21:31 CST
@@ -65,7 +64,7 @@ x2, x3, x4 scale PSNR of model/0310-2114_model/model_epoch_35.pkl
 42.932984128665936
 -----------------
 ```
-the acerage PSNR will be generated and  store in output.txt
+>Note that: Each scale have five sets of CT images, so it will ouput five values, the acerage PSNR. You can calculate the average PSNR mannually. And the generated results will store in **output.txt**(you also can specified the fileName).
 **Note that, If you want to use `auto-execute.sh`, you must promise 
 established file-tree format!**
 ```
@@ -75,3 +74,6 @@ model_path='model_12layers_25input_3kernel_multi/model_epoch_20.pkl'#specify mod
 saved_prefix='30x30_'#prefix file path  to save generated images
 format='bmp'#reading images format
 ```
+## Q&A
+1. Why do we restore with small blocks?
+If you feed size of 400x400x400 blocks in to network, I think that your computer would explode because of the limitaitons of GPU memory(Unless you have extra large memory). So we need to reconstruct by sub-blocks and compose those by order.
