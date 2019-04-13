@@ -2,9 +2,9 @@
 ## How to make trainig dataset for 3D CT images?  
 This part is coded by matlab. 
 ## Where to find Training Data?
-The traing data is generated through 5 CT sets, summed up to  2000 single 2D images totally. 
-So this is so big training data library. We generated 32.5G of data, it is inconvenient to upload to Github.
-If your would like to trainig network, please concat me with 1556905690@qq.com or issue in this Repository.
+The training data is generated through 5 sets of CT images, summed up to  2000 single 2D images totally. 
+So this is so big training data library. Finally, We have generated 32.5G of data, it is inconvenient to upload to Github.
+If your would like to using our data to train, please concat me with 1556905690@qq.com or issue in this Repository.
 ## How to train a 3D super resolution Network?  
 It is easy to train our network,running with specified parameters, and the following is a helper of parameters:
 ```
@@ -28,7 +28,7 @@ python main.py
 ## How to  find our network 
 `3dsrcnn.py` This program is a structure for building a network.  ``
 ## Automatically Reconstruct and calculate PSNR  
-Because our validation dataset is very complex which contains 5 sets, each set contains x2, x3, x4 scale.
+Because our validation dataset is very complex which contains 5 sets of CT images, each set contains x2, x3, x4 scale.
 What's more, we need to calculate PSNR of every Epoch. We provided automatically executing script.
   
 Note that you must specify path to low resoluiton images(inter_path)
