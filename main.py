@@ -6,7 +6,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
-from 3dsrcnn import Net
+from model import Net
 from dataset import DatasetFromHdf5
 import time
 import numpy as np
