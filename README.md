@@ -1,6 +1,11 @@
 # 3DSRCNN-pytorch  
-## How to make trainig dataset for 3D CT images?  
-This part is coded by matlab. **(Due to the publication consideration, we haven't published the latest code of how to make datas, if you are editors or reviewers, please concat me with 1556905690@qq.com)**
+## How to find original Datasets?
+Datasets have been uploaded to google drive. You can access these via the following URL:  
+Original TrainDatasets: https://drive.google.com/file/d/1WQdSuA_mj-d57oOnQ8VYpTzTFAnfGc2w/view?usp=sharing  
+TestSets: https://drive.google.com/file/d/1NpPXQ6UYkGySZMC9Q34b4fKYXhxHPiEF/view?usp=sharing  
+**Note that the above datas are 2D-images, you need to compose them to 3D shape.**
+## How to make training dataset for 3D CT images?  
+This part is coded by matlab (python, Yes!) and the specific workflow had been elaborated in the paper-"CT-image Super Resolution Using 3D Convolutional Neural Network-Section 3.2”. . **(Due to the publication consideration, we haven't published the latest code of how to make datas, if you are editors or reviewers, please concat me with 1556905690@qq.com)**  
 ## Where to find Training Data?
 The training data is generated through 5 sets of CT images, summed up to  2000 single 2D images totally. 
 So this is so big training data library. Finally, We have generated 32.5G of data, it is inconvenient to upload to Github.
